@@ -1,12 +1,15 @@
 {
-  "name": "cli",
-  "module": "index.ts",
+  "name": "@reuise/cli",
+  "version": "0.0.1",
+  "bin": {
+    "reuise": "index.ts"
+  },
   "type": "module",
   "private": true,
+  "dependencies": {
+    "@reuise/ui": "link:../ui"
+  },
   "devDependencies": {
     "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
   }
 }

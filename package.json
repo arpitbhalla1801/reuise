@@ -12,9 +12,7 @@
     "build:cli": "bun run --cwd packages/cli build"
   },
   "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
+    "@types/bun": "latest",
+    "typescript": "^5.9.3"
   }
 }
