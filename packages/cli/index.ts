@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { cp } from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { existsSync } from "node:fs";
 
@@ -8,17 +8,33 @@ const args = process.argv.slice(2);
 const command = args[0];
 const component = args[1];
 
-if (command === "add" && component) {
-  const componentPath = join(import.meta.dir, "../ui/src/components", `${component}.tsx`);
-  const destPath = join(process.cwd(), "components", `${component}.tsx`);
+async function loadConfig() {
+  try {
+    const config = await import(join(process.cwd(), "reuise.config.json"));
+    return config.default || config;
+  } catch {
+    return {
+      repo: "https://raw.githubusercontent.com/arpitbhalla1801/reuise/refs/heads/main/packages/ui/src/components",
+      componentsPath: "./components"
+    };
+  }
+}
 
-  if (!existsSync(componentPath)) {
-    console.error(`❌ Component "${component}" not found in @reuise/ui`);
+if (command === "add" && component) {
+  const config = await loadConfig();
+  const url = `${config.repo}/${component}.tsx`;
+  const destPath = join(process.cwd(), config.componentsPath, `${component}.tsx`);
+
+  console.log(`🌐 Fetching ${url}`);
+  const res = await fetch(url);
+  if (!res.ok) {
+    console.error(`❌ Component "${component}" not found`);
     process.exit(1);
   }
 
-  await cp(componentPath, destPath);
-  console.log(`✅ Added ${component}.tsx to ./components/`);
+  const code = await res.text();
+  await Bun.write(destPath, code);
+  console.log(`✅ Added ${component}.tsx to ${config.componentsPath}`);
 } else {
   console.log("Usage: reuise add <component>");
 }
