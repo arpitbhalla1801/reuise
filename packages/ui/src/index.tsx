@@ -1,8 +1,12 @@
 import { serve } from "bun";
 import index from "./index.html";
+import preview from "./preview.html";
 
 const server = serve({
   routes: {
+    // Serve preview page for component testing
+    "/preview": preview,
+
     // Serve index.html for all unmatched routes.
     "/*": index,
 
