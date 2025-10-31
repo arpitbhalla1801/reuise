@@ -8,9 +8,20 @@
 import React, { useState } from "react";
 import "./index.css";
 import { Button } from "./components/Button";
+import { Card, CardHeader, CardBody, CardFooter } from "./components/Card";
+import { Input } from "./components/Input";
+import { Badge } from "./components/Badge";
+import { Alert } from "./components/Alert";
+import { Avatar, AvatarGroup } from "./components/Avatar";
+import { Switch } from "./components/Switch";
+import { Spinner, SpinnerOverlay } from "./components/Spinner";
 
 export function Preview() {
   const [count, setCount] = useState(0);
+  const [inputValue, setInputValue] = useState("");
+  const [showAlert, setShowAlert] = useState(true);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -46,19 +57,331 @@ export function Preview() {
           </div>
         </PreviewSection>
 
-        {/* Add more components here */}
+        {/* Card Component */}
         <PreviewSection
-          title="New Component"
-          description="Add your new component here to preview it"
+          title="Card Component"
+          description="Flexible card container with header, body, and footer"
         >
-          <div className="p-8 text-center text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">
-            <p className="text-lg mb-2">👋 Ready to preview your component?</p>
-            <p className="text-sm">
-              Import your component and add it in this section
-            </p>
-            <code className="block mt-4 text-xs bg-gray-100 px-3 py-2 rounded">
-              import {"{ YourComponent }"} from "./components/YourComponent";
-            </code>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card variant="default">
+              <CardHeader>
+                <h3 className="font-semibold text-gray-900">Default Card</h3>
+              </CardHeader>
+              <CardBody>
+                <p className="text-gray-600 text-sm">
+                  A simple card with subtle shadow for depth.
+                </p>
+              </CardBody>
+              <CardFooter>
+                <Button size="sm">Action</Button>
+              </CardFooter>
+            </Card>
+
+            <Card variant="bordered">
+              <CardHeader>
+                <h3 className="font-semibold text-gray-900">Bordered Card</h3>
+              </CardHeader>
+              <CardBody>
+                <p className="text-gray-600 text-sm">
+                  Card with a prominent border for emphasis.
+                </p>
+              </CardBody>
+              <CardFooter>
+                <Button variant="outline" size="sm">Learn More</Button>
+              </CardFooter>
+            </Card>
+
+            <Card variant="elevated">
+              <CardHeader>
+                <h3 className="font-semibold text-gray-900">Elevated Card</h3>
+              </CardHeader>
+              <CardBody>
+                <p className="text-gray-600 text-sm">
+                  Hover over me! Enhanced shadow on hover.
+                </p>
+              </CardBody>
+              <CardFooter>
+                <Button size="sm">Explore</Button>
+              </CardFooter>
+            </Card>
+          </div>
+        </PreviewSection>
+
+        {/* Input Component */}
+        <PreviewSection
+          title="Input Component"
+          description="Text input with labels, icons, and validation states"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+            <Input
+              label="Email Address"
+              type="email"
+              placeholder="you@example.com"
+              helperText="We'll never share your email"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+            
+            <Input
+              label="Password"
+              type="password"
+              placeholder="Enter password"
+              error="Password must be at least 8 characters"
+            />
+
+            <Input
+              label="Search"
+              placeholder="Search..."
+              leftIcon={
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              }
+            />
+
+            <Input
+              label="Amount"
+              type="number"
+              placeholder="0.00"
+              leftIcon={<span className="text-sm">$</span>}
+              rightIcon={<span className="text-sm">USD</span>}
+            />
+          </div>
+        </PreviewSection>
+
+        {/* Badge Component */}
+        <PreviewSection
+          title="Badge Component"
+          description="Status indicators and labels in various styles"
+        >
+          <div className="space-y-4">
+            <div className="flex flex-wrap gap-2 items-center">
+              <span className="text-sm text-gray-600">Default sizes:</span>
+              <Badge size="sm">Small</Badge>
+              <Badge size="md">Medium</Badge>
+              <Badge size="lg">Large</Badge>
+            </div>
+            
+            <div className="flex flex-wrap gap-2 items-center">
+              <span className="text-sm text-gray-600">Variants:</span>
+              <Badge variant="default">Default</Badge>
+              <Badge variant="success">Success</Badge>
+              <Badge variant="warning">Warning</Badge>
+              <Badge variant="error">Error</Badge>
+              <Badge variant="info">Info</Badge>
+            </div>
+
+            <div className="flex flex-wrap gap-2 items-center">
+              <span className="text-sm text-gray-600">With status dots:</span>
+              <Badge variant="success" dot>Active</Badge>
+              <Badge variant="warning" dot>Pending</Badge>
+              <Badge variant="error" dot>Failed</Badge>
+              <Badge variant="info" dot>Processing</Badge>
+            </div>
+          </div>
+        </PreviewSection>
+
+        {/* Alert Component */}
+        <PreviewSection
+          title="Alert Component"
+          description="Contextual feedback messages for user actions"
+        >
+          <div className="space-y-4 max-w-3xl">
+            <Alert variant="info" title="Information">
+              This is an informational message with helpful details.
+            </Alert>
+
+            <Alert variant="success" title="Success!">
+              Your changes have been saved successfully.
+            </Alert>
+
+            <Alert variant="warning" title="Warning">
+              Please review your input before proceeding.
+            </Alert>
+
+            {showAlert && (
+              <Alert 
+                variant="error" 
+                title="Error" 
+                onClose={() => setShowAlert(false)}
+              >
+                An error occurred while processing your request. Click the X to dismiss.
+              </Alert>
+            )}
+            
+            {!showAlert && (
+              <Button onClick={() => setShowAlert(true)} size="sm">
+                Show dismissible alert
+              </Button>
+            )}
+          </div>
+        </PreviewSection>
+
+        {/* Avatar Component */}
+        <PreviewSection
+          title="Avatar Component"
+          description="User profile pictures with fallbacks and status indicators"
+        >
+          <div className="space-y-6">
+            <div className="flex flex-wrap gap-4 items-center">
+              <span className="text-sm text-gray-600 w-full">Sizes:</span>
+              <Avatar size="sm" fallback="SM" />
+              <Avatar size="md" fallback="MD" />
+              <Avatar size="lg" fallback="LG" />
+              <Avatar size="xl" fallback="XL" />
+            </div>
+
+            <div className="flex flex-wrap gap-4 items-center">
+              <span className="text-sm text-gray-600 w-full">With status:</span>
+              <Avatar fallback="AK" status="online" />
+              <Avatar fallback="JD" status="busy" />
+              <Avatar fallback="SM" status="away" />
+              <Avatar fallback="RL" status="offline" />
+            </div>
+
+            <div className="space-y-2">
+              <span className="text-sm text-gray-600 block">Avatar Group:</span>
+              <AvatarGroup max={4}>
+                <Avatar fallback="AB" />
+                <Avatar fallback="CD" />
+                <Avatar fallback="EF" />
+                <Avatar fallback="GH" />
+                <Avatar fallback="IJ" />
+                <Avatar fallback="KL" />
+              </AvatarGroup>
+            </div>
+          </div>
+        </PreviewSection>
+
+        {/* Switch Component */}
+        <PreviewSection
+          title="Switch Component"
+          description="Toggle switches for binary options"
+        >
+          <div className="space-y-6">
+            <div className="flex flex-wrap gap-6 items-center">
+              <Switch size="sm" label="Small switch" />
+              <Switch size="md" label="Medium switch" defaultChecked />
+              <Switch size="lg" label="Large switch" />
+            </div>
+
+            <div className="flex flex-wrap gap-6 items-center">
+              <Switch 
+                label="Enable notifications" 
+                checked={isEnabled}
+                onChange={setIsEnabled}
+              />
+              <Switch label="Disabled switch" disabled />
+              <Switch label="Disabled (on)" disabled defaultChecked />
+            </div>
+
+            <Card variant="bordered" className="max-w-md">
+              <CardBody>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Dark Mode</span>
+                    <Switch size="sm" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Email Notifications</span>
+                    <Switch size="sm" defaultChecked />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Auto-save</span>
+                    <Switch size="sm" defaultChecked />
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+          </div>
+        </PreviewSection>
+
+        {/* Spinner Component */}
+        <PreviewSection
+          title="Spinner Component"
+          description="Loading indicators for async operations"
+        >
+          <div className="space-y-6">
+            <div className="flex flex-wrap gap-6 items-center">
+              <div className="text-center">
+                <Spinner size="sm" />
+                <p className="text-xs text-gray-600 mt-2">Small</p>
+              </div>
+              <div className="text-center">
+                <Spinner size="md" />
+                <p className="text-xs text-gray-600 mt-2">Medium</p>
+              </div>
+              <div className="text-center">
+                <Spinner size="lg" />
+                <p className="text-xs text-gray-600 mt-2">Large</p>
+              </div>
+              <div className="text-center">
+                <Spinner size="xl" />
+                <p className="text-xs text-gray-600 mt-2">Extra Large</p>
+              </div>
+            </div>
+
+            <div className="flex gap-4 items-center">
+              <Button onClick={() => setShowSpinner(true)}>
+                Show Loading Overlay
+              </Button>
+              <Button 
+                variant="outline"
+                disabled={showSpinner}
+                className="inline-flex items-center gap-2"
+              >
+                {showSpinner && <Spinner size="sm" />}
+                {showSpinner ? "Loading..." : "Simulated Loading"}
+              </Button>
+            </div>
+
+            <SpinnerOverlay 
+              show={showSpinner} 
+              message="Processing your request..."
+            />
+            
+            {showSpinner && setTimeout(() => setShowSpinner(false), 2000) && null}
+          </div>
+        </PreviewSection>
+
+        {/* Combination Example */}
+        <PreviewSection
+          title="Real-World Example"
+          description="Components working together in a realistic scenario"
+        >
+          <div className="max-w-2xl">
+            <Card variant="elevated">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Avatar fallback="AB" status="online" />
+                    <div>
+                      <h3 className="font-semibold text-gray-900">Arpit Bhalla</h3>
+                      <Badge variant="success" size="sm">Active</Badge>
+                    </div>
+                  </div>
+                  <Switch size="sm" defaultChecked />
+                </div>
+              </CardHeader>
+              <CardBody className="space-y-4">
+                <Input 
+                  label="Project Name"
+                  placeholder="Enter project name"
+                  leftIcon={
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                    </svg>
+                  }
+                />
+                <Alert variant="info">
+                  This project will be visible to all team members.
+                </Alert>
+              </CardBody>
+              <CardFooter className="flex gap-2">
+                <Button>Create Project</Button>
+                <Button variant="outline">Cancel</Button>
+              </CardFooter>
+            </Card>
           </div>
         </PreviewSection>
       </main>
