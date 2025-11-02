@@ -15,6 +15,11 @@ import { Alert } from "./components/Alert";
 import { Avatar, AvatarGroup } from "./components/Avatar";
 import { Switch } from "./components/Switch";
 import { Spinner, SpinnerOverlay } from "./components/Spinner";
+import { Modal } from "./components/Modal";
+import { ToastProvider, useToast } from "./components/Toast";
+import { Dropdown } from "./components/Dropdown";
+import { Tabs } from "./components/Tabs";
+import { Tooltip } from "./components/Tooltip";
 
 export function Preview() {
   const [count, setCount] = useState(0);
@@ -22,6 +27,26 @@ export function Preview() {
   const [showAlert, setShowAlert] = useState(true);
   const [isEnabled, setIsEnabled] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  // small demo component that uses the Toast context
+  function ToastDemo() {
+    const { push } = useToast();
+
+    return (
+      <div className="flex flex-col sm:flex-row gap-3">
+        <Button onClick={() => push({ title: "Info", description: "This is an info toast", variant: "info" })}>
+          Show Info Toast
+        </Button>
+        <Button variant="outline" onClick={() => push({ title: "Success", description: "Saved successfully", variant: "success" })}>
+          Show Success
+        </Button>
+        <Button onClick={() => push({ title: "Error", description: "Something went wrong", variant: "error", duration: 6000 })}>
+          Show Error
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -36,6 +61,7 @@ export function Preview() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
+        <ToastProvider>
         {/* Preview Section Template */}
         <PreviewSection
           title="Button Component"
@@ -344,6 +370,85 @@ export function Preview() {
           </div>
         </PreviewSection>
 
+        {/* Modal, Toast, Dropdown, Tabs, Tooltip Examples */}
+
+        {/* Modal Component */}
+        <PreviewSection title="Modal" description="Accessible modal with overlay">
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <Button onClick={() => setModalOpen(true)}>Open Modal</Button>
+              <Button variant="outline" onClick={() => setModalOpen(true)}>Open (outline)</Button>
+            </div>
+
+            <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={<span>Welcome to the Modal</span>}>
+              <p className="text-sm text-gray-700">This is a simple modal. You can close with Escape or the X button.</p>
+              <div className="mt-4 flex gap-2 justify-end">
+                <Button onClick={() => setModalOpen(false)}>Close</Button>
+                <Button variant="outline" onClick={() => { setModalOpen(false); }}>Dismiss</Button>
+              </div>
+            </Modal>
+          </div>
+        </PreviewSection>
+
+        {/* Toast / Toaster Component */}
+        <PreviewSection title="Toasts" description="Push transient messages with the Toaster">
+          <ToastDemo />
+        </PreviewSection>
+
+        {/* Dropdown Component */}
+        <PreviewSection title="Dropdown / Menu" description="Simple dropdown with menu items">
+          <div className="flex gap-4 items-center">
+            <Dropdown trigger={<Button>Open Menu</Button>}>
+              <a className="block px-4 py-2 hover:bg-gray-50" href="#">Action 1</a>
+              <a className="block px-4 py-2 hover:bg-gray-50" href="#">Action 2</a>
+              <div className="border-t my-1" />
+              <a className="block px-4 py-2 hover:bg-gray-50" href="#">Settings</a>
+            </Dropdown>
+
+            <Dropdown trigger={<Button variant="outline">Profile</Button>} align="right">
+              <a className="block px-4 py-2 hover:bg-gray-50" href="#">Your profile</a>
+              <a className="block px-4 py-2 hover:bg-gray-50" href="#">Sign out</a>
+            </Dropdown>
+          </div>
+        </PreviewSection>
+
+        {/* Tabs Component */}
+        <PreviewSection title="Tabs" description="Keyboard-friendly tabs with panels">
+          <div className="max-w-2xl">
+            <Tabs>
+              <Tabs.List>
+                <Tabs.Trigger index={0}>Overview</Tabs.Trigger>
+                <Tabs.Trigger index={1}>Details</Tabs.Trigger>
+                <Tabs.Trigger index={2}>Activity</Tabs.Trigger>
+              </Tabs.List>
+              <div className="mt-4">
+                <Tabs.Panel index={0}>
+                  <p className="text-sm text-gray-700">Overview content goes here.</p>
+                </Tabs.Panel>
+                <Tabs.Panel index={1}>
+                  <p className="text-sm text-gray-700">Details content goes here.</p>
+                </Tabs.Panel>
+                <Tabs.Panel index={2}>
+                  <p className="text-sm text-gray-700">Activity content goes here.</p>
+                </Tabs.Panel>
+              </div>
+            </Tabs>
+          </div>
+        </PreviewSection>
+
+        {/* Tooltip Component */}
+        <PreviewSection title="Tooltip" description="Small hover/focus hints">
+          <div className="flex gap-4 items-center">
+            <Tooltip content="This is a helpful tooltip">
+              <Button>Hover me</Button>
+            </Tooltip>
+
+            <Tooltip side="right" content={<span>Right side tooltip</span>}>
+              <Button variant="outline">Hover (right)</Button>
+            </Tooltip>
+          </div>
+        </PreviewSection>
+
         {/* Combination Example */}
         <PreviewSection
           title="Real-World Example"
@@ -384,6 +489,7 @@ export function Preview() {
             </Card>
           </div>
         </PreviewSection>
+        </ToastProvider>
       </main>
 
       {/* Footer with instructions */}
