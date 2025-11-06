@@ -8,7 +8,7 @@ export interface DropdownProps {
 
 export const Dropdown: React.FC<DropdownProps> = ({ trigger, children, align = "left" }) => {
   const [open, setOpen] = React.useState(false);
-  const buttonRef = React.useRef<HTMLButtonElement | null>(null);
+  const triggerRef = React.useRef<HTMLDivElement | null>(null);
   const panelRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
@@ -18,7 +18,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ trigger, children, align = "
       if (
         panelRef.current && panelRef.current.contains(target)
       ) return;
-      if (buttonRef.current && buttonRef.current.contains(target)) return;
+      if (triggerRef.current && triggerRef.current.contains(target)) return;
       setOpen(false);
     }
     document.addEventListener("mousedown", onDoc);
@@ -27,9 +27,9 @@ export const Dropdown: React.FC<DropdownProps> = ({ trigger, children, align = "
 
   return (
     <div className="relative inline-block">
-      <button ref={buttonRef} onClick={() => setOpen((s) => !s)} className="inline-flex items-center gap-2">
+      <div ref={triggerRef} onClick={() => setOpen((s) => !s)} className="inline-flex items-center gap-2 cursor-pointer">
         {trigger}
-      </button>
+      </div>
 
       {open && (
         <div

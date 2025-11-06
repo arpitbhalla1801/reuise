@@ -20,6 +20,11 @@ import { ToastProvider, useToast } from "./components/Toast";
 import { Dropdown } from "./components/Dropdown";
 import { Tabs } from "./components/Tabs";
 import { Tooltip } from "./components/Tooltip";
+import { Skeleton, SkeletonText, SkeletonCard } from "./components/Skeleton";
+import { Progress } from "./components/Progress";
+import { Accordion } from "./components/Accordion";
+import { Breadcrumbs } from "./components/Breadcrumbs";
+import { Pagination } from "./components/Pagination";
 
 export function Preview() {
   const [count, setCount] = useState(0);
@@ -28,6 +33,8 @@ export function Preview() {
   const [isEnabled, setIsEnabled] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [progress, setProgress] = useState(45);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // small demo component that uses the Toast context
   function ToastDemo() {
@@ -446,6 +453,193 @@ export function Preview() {
             <Tooltip side="right" content={<span>Right side tooltip</span>}>
               <Button variant="outline">Hover (right)</Button>
             </Tooltip>
+          </div>
+        </PreviewSection>
+
+        {/* Skeleton Component */}
+        <PreviewSection title="Skeleton" description="Loading placeholders with shimmer animation">
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <h3 className="text-sm font-medium text-gray-700">Basic Skeletons</h3>
+              <div className="flex gap-4 items-center">
+                <Skeleton variant="circular" width={50} height={50} />
+                <div className="flex-1 space-y-2">
+                  <Skeleton variant="text" width="60%" />
+                  <Skeleton variant="text" width="80%" />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-sm font-medium text-gray-700">Skeleton Text</h3>
+              <SkeletonText lines={4} />
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-sm font-medium text-gray-700">Skeleton Card</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <SkeletonCard />
+                <SkeletonCard />
+              </div>
+            </div>
+          </div>
+        </PreviewSection>
+
+        {/* Progress Component */}
+        <PreviewSection title="Progress" description="Progress bars with variants and animations">
+          <div className="space-y-6 max-w-2xl">
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>Default Progress</span>
+                <span>{progress}%</span>
+              </div>
+              <Progress value={progress} showLabel />
+              <div className="flex gap-2">
+                <Button size="sm" onClick={() => setProgress(Math.max(0, progress - 10))}>-10%</Button>
+                <Button size="sm" onClick={() => setProgress(Math.min(100, progress + 10))}>+10%</Button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <span className="text-sm text-gray-600">Variants</span>
+              <Progress value={75} variant="success" />
+              <Progress value={50} variant="warning" />
+              <Progress value={25} variant="error" />
+            </div>
+
+            <div className="space-y-2">
+              <span className="text-sm text-gray-600">Sizes</span>
+              <Progress value={60} size="sm" />
+              <Progress value={60} size="md" />
+              <Progress value={60} size="lg" />
+            </div>
+
+            <div className="space-y-2">
+              <span className="text-sm text-gray-600">Indeterminate (Loading)</span>
+              <Progress />
+            </div>
+          </div>
+        </PreviewSection>
+
+        {/* Accordion Component */}
+        <PreviewSection title="Accordion" description="Collapsible content sections">
+          <div className="max-w-2xl space-y-6">
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 mb-3">Single Expand</h3>
+              <Accordion
+                items={[
+                  {
+                    id: "1",
+                    title: "What is Reuise?",
+                    content: "Reuise is a modern UI component library built with React and Tailwind CSS. It provides beautiful, accessible components out of the box.",
+                  },
+                  {
+                    id: "2",
+                    title: "How do I install it?",
+                    content: "You can install Reuise using npm or yarn. Just run 'npm install @reuise/ui' and import the components you need.",
+                  },
+                  {
+                    id: "3",
+                    title: "Is it customizable?",
+                    content: "Yes! All components accept className props and can be styled with Tailwind utilities or custom CSS.",
+                  },
+                ]}
+              />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 mb-3">Multiple Expand</h3>
+              <Accordion
+                multiple
+                defaultOpen={["faq1"]}
+                items={[
+                  {
+                    id: "faq1",
+                    title: "Can I open multiple items?",
+                    content: "Yes, when the 'multiple' prop is set to true, you can have multiple accordion items open at the same time.",
+                  },
+                  {
+                    id: "faq2",
+                    title: "Is it accessible?",
+                    content: "All components follow ARIA guidelines and support keyboard navigation.",
+                  },
+                ]}
+              />
+            </div>
+          </div>
+        </PreviewSection>
+
+        {/* Breadcrumbs Component */}
+        <PreviewSection title="Breadcrumbs" description="Navigation breadcrumbs with custom separators">
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 mb-3">Default Separator</h3>
+              <Breadcrumbs
+                items={[
+                  { label: "Home", href: "#" },
+                  { label: "Components", href: "#" },
+                  { label: "Breadcrumbs" },
+                ]}
+              />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 mb-3">Custom Separator</h3>
+              <Breadcrumbs
+                separator="›"
+                items={[
+                  { label: "Dashboard", onClick: () => console.log("Dashboard") },
+                  { label: "Projects", onClick: () => console.log("Projects") },
+                  { label: "Reuise UI", onClick: () => console.log("Reuise UI") },
+                  { label: "Settings" },
+                ]}
+              />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 mb-3">With Icons</h3>
+              <Breadcrumbs
+                separator="→"
+                items={[
+                  { label: <span className="flex items-center gap-1">🏠 Home</span>, href: "#" },
+                  { label: <span className="flex items-center gap-1">📦 Products</span>, href: "#" },
+                  { label: <span className="flex items-center gap-1">✨ New Item</span> },
+                ]}
+              />
+            </div>
+          </div>
+        </PreviewSection>
+
+        {/* Pagination Component */}
+        <PreviewSection title="Pagination" description="Page navigation with smart ellipsis">
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 mb-3">Current Page: {currentPage}</h3>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={20}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 mb-3">Without First/Last Buttons</h3>
+              <Pagination
+                currentPage={3}
+                totalPages={10}
+                onPageChange={(p) => console.log("Page:", p)}
+                showFirstLast={false}
+              />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 mb-3">Few Pages</h3>
+              <Pagination
+                currentPage={2}
+                totalPages={5}
+                onPageChange={(p) => console.log("Page:", p)}
+              />
+            </div>
           </div>
         </PreviewSection>
 
